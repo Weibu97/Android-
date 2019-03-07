@@ -1,1 +1,167 @@
-1.编写一Android应用程序，自行创建两个fragment（内容自定），并观察fragment的各生命周期，界面运行截图自定，生命周期可参考如下：
+1.编写一Android应用程序，自行创建两个fragment（内容自定），并观察fragment的各生命周期
+
+MainActivity.java代码如下：
+public class MainActivity extends AppCompatActivity implements OnClickListener {
+    private FragmentManager manager;
+    private FragmentTransaction transaction;
+    private Button button1,button2;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        manager = getFragmentManager();
+        button1 = (Button)this.findViewById(R.id.button1);
+        button1.setOnClickListener(this);
+        button2 = (Button)this.findViewById(R.id.button2);
+        button2.setOnClickListener(this);
+
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    //通过点击不同的按钮，跳转到不同的Fragment
+    @Override
+    public void onClick(View v) {
+        // TODO Auto-generated method stub
+        transaction = manager.beginTransaction();
+        switch (v.getId()) {
+            case R.id.button1:
+                Fragment01 fragment01 = new Fragment01();
+                transaction.replace(R.id.right, fragment01, "fragment01");
+                transaction.addToBackStack("fragment01");// 添加到Activity管理的回退栈中。
+                break;
+
+            case R.id.button2:
+                Fragment02 fragment02 = new Fragment02();
+                transaction.replace(R.id.right, fragment02, "fragment02");
+                transaction.addToBackStack("fragment02");
+                break;
+        }
+        transaction.commit();
+    }
+}
+
+Fragment01.java代码如下：
+（Fragment02.java与Fragment01基本一致）
+public class Fragment02 extends Fragment{
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.f1, null);
+        return view;
+    }
+}
+
+如果要查看生命周期则Fragment01与Fragment02代码如下修改：
+public class Fragment01 extends Fragment{
+    public static final String TAG = "Fragment01";
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate");
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
+        View view = inflater.inflate(R.layout.f1, null);
+        return view;
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated");
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "onDestroyView");
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d(TAG, "onDetach");
+    }
+}
+
+activity_main.xml代码如下：
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <LinearLayout
+        android:id="@+id/left"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#CCCCCC"
+        android:orientation="vertical" >
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="第一个按钮"
+           />
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="第二个按钮"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/right"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+    </LinearLayout>
+</LinearLayout>
+
+f1.xml代码如下：
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="第一个" />
+</LinearLayout>
+f2.xml代码如f1.xml一致稍加修改即可。
